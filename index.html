@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RickFLIX | Entretenimiento Premium</title>
+
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --dark-bg: #141414;
+            --card-width: 280px;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            margin: 0;
+            color: white; 
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* NAVEGACIÓN CON BUSCADOR */
+        nav {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+            padding: 20px 4%;
+            position: fixed;
+            top: 0;
+            width: 92%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--netflix-red);
+            font-size: 2rem;
+            font-weight: bold;
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #fff;
+            padding: 5px 10px;
+            border-radius: 2px;
+        }
+
+        .search-container input {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 5px;
+            outline: none;
+            width: 120px;
+            transition: width 0.4s ease;
+        }
+
+        .search-container input:focus { width: 220px; }
+
+        /* BANNER PRINCIPAL (HERO) */
+        .hero {
+            height: 80vh;
+            background: linear-gradient(to right, var(--dark-bg) 10%, transparent 90%), 
+                        url('Img/1019426.jpg') center/cover;
+            display: flex;
+            align-items: center;
+            padding: 0 4%;
+            margin-bottom: 20px;
+        }
+
+        .hero-content { max-width: 600px; }
+        .hero-content h1 { font-size: clamp(2rem, 8vw, 4rem); margin: 0; }
+        .hero-content p { font-size: 1.2rem; margin: 20px 0; color: #e5e5e5; }
+
+        .btn-play {
+            background-color: white;
+            color: black;
+            padding: 12px 35px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-play:hover { background-color: rgba(255,255,255,0.7); }
+
+        /* FILAS DE VIDEOS */
+        .row { margin: 3vw 0 3vw 4%; }
+        .row-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; }
+
+        .video-slider {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 20px 0;
+            scrollbar-width: none;
+        }
+
+        .video-slider::-webkit-scrollbar { display: none; }
+
+        .video-card {
+            flex: 0 0 var(--card-width);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+
+        .video-card:hover {
+            transform: scale(1.15);
+            z-index: 100;
+        }
+
+        .video-box {
+            background-color: #181818;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        video {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-info {
+            padding: 15px;
+            background-color: #181818;
+        }
+
+        .video-info strong { display: block; margin-bottom: 5px; font-size: 0.9rem; }
+        .match { color: #46d369; font-weight: bold; font-size: 0.8rem; }
+
+        /* LISTADO DE EPISODIOS */
+        .episodes-container {
+            margin: 20px 4%;
+            max-width: 1000px;
+        }
+
+        .episode-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #333;
+            gap: 25px;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+
+        .episode-item:hover { background: #222; border-radius: 8px; }
+
+        .ep-num { font-size: 1.5rem; color: #666; font-weight: bold; min-width: 40px; }
+        
+        .ep-thumb {
+            width: 180px;
+            height: 100px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .ep-thumb video { height: 100%; width: 100%; object-fit: cover; }
+
+        .ep-desc h3 { margin: 0 0 5px 0; font-size: 1.1rem; }
+        .ep-desc p { margin: 0; font-size: 0.9rem; color: #999; line-height: 1.4; }
+
+        /* WHATSAPP FLOTANTE */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        footer {
+            padding: 50px 4% 20px;
+            color: #808080;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo">RICKFLIX</a>
+        <div class="search-container">
+            <span style="color: white; margin-right: 5px;">🔍</span>
+            <input type="text" id="searchInput" placeholder="Buscar contenido...">
+        </div>
+    </nav>
+
+    <!-- SECCIÓN DESTACADA -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Servicios Luna</h1>
+            <p>Acceso ilimitado al mejor contenido digital del multiverso. Calidad 4K garantizada para todos tus dispositivos.</p>
+            <a href="https://wa.me" class="btn-play">▶ Ver Ahora</a>
+        </div>
+    </div>
+
+    <!-- LISTADO DE EPISODIOS -->
+    <div class="row">
+        <div class="row-title">Episodios: Luna Temporada 1</div>
+        <div class="episodes-container">
+            
+            <div class="episode-item searchable-item">
+                <div class="ep-num">1</div>
+                <div class="ep-thumb">
+                    <video muted><source src="Video/Luna.mp4" type="video/mp4"></video>
+                </div>
+                <div class="ep-desc">
+                    <h3 class="item-title">El Comienzo</h3>
+                    <p>Rick inicia la búsqueda de la señal perdida en la dimensión C-137 para salvar el streaming.</p>
+                </div>
+            </div>
+
+            <div class="episode-item searchable-item">
+                <div class="ep-num">2</div>
+                <div class="ep-thumb">
+                    <video muted><source src="Video/Amor.mp4.mp4"></video>
+                </div>
+                <div class="ep-desc">
+                    <h3 class="item-title">Conexión Luna</h3>
+                    <p>Se revela el secreto de los servidores premium y su tecnología de alta velocidad.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FILA DE TENDENCIAS -->
+    <div class="row">
+        <div class="row-title">Populares en RickFlix</div>
+        <div class="video-slider">
+            
+            <div class="video-card searchable-item">
+                <div class="video-box">
+                    <video controls><source src="Video/Amor.mp4.mp4"></video>
+                    <div class="video-info">
+                        <strong class="item-title">Luna: Especial</strong>
+                        <span class="match">98% para ti</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="video-card searchable-item">
+                <div class="video-box">
+                    <video controls><source src="Video/Aer.mp4.mp4"></video>
+                    <div class="video-info">
+                        <strong class="item-title">Rick: Servicios</strong>
+                        <span class="match">95% de coincidencia</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- WHATSAPP -->
+    <a href="https://wa.me" class="whatsapp-float" target="_blank">
+        <img src="https://wikimedia.org" width="35" alt="WA">
+    </a>
+
+    <footer>
+        <p>&copy; 2026 RickFlix | Todos los derechos reservados</p>
+        <p>Atención al cliente: 849 587 5118</p>
+    </footer>
+
+    <script>
+        // SCRIPT DE BÚSQUEDA
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('keyup', () => {
+            const filter = searchInput.value.toLowerCase();
+            const items = document.querySelectorAll('.searchable-item');
+            
+            items.forEach(item => {
+                const title = item.querySelector('.item-title').textContent.toLowerCase();
+                if (title.includes(filter)) {
+                    item.style.display = ""; 
+                } else {
+                    item.style.display = "none"; 
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
